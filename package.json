@@ -7,11 +7,13 @@
     "dev": "vite --host 0.0.0.0",
     "build": "vite build && vite build --ssr src/render.jsx --outDir .ssr && node scripts/prerender.mjs",
     "preview": "vite preview --host 0.0.0.0",
-    "test": "node --test src/cases.test.js",
+    "test": "node --test src/cases.test.js src/app/engine.test.js src/app/workflow.test.js",
     "test:ui": "node scripts/ui-check.mjs",
     "assets": "node scripts/export-assets.mjs",
     "preview:file": "node scripts/standalone.mjs",
-    "test:artifacts": "node scripts/artifact-check.mjs"
+    "test:artifacts": "node scripts/artifact-check.mjs",
+    "test:prototype": "node scripts/prototype-check.mjs",
+    "test:backend": "python3 backend/tests/test_lambdas.py"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
