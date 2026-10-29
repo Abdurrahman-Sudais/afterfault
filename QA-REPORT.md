@@ -32,3 +32,16 @@ The contact mailto destination and copy flow were checked; a real email draft wa
 No deployment, custom domain/DNS, hosting access protection, live route status codes, AWS services, real supplier processing, or production integrations were tested or created. Pages and a conventional static 404 file are provided; host-specific behavior must be checked after an owner-authorized deployment.
 
 Policies are review drafts. No Product Hunt draft is included because it was optional. No profiles or external accounts were created.
+
+
+## StudyPatch-parity revision — 2026-10-29
+
+Added: the interactive multi-role prototype (`/app`); home sections (prototype CTA, benefits, use cases, safeguards, plans, FAQ); a CRM-ready early-access form; `docs/architecture.md`, `docs/safeguards.md` and `docs/crm-plan.md`; and `backend/` starters. The original desk, leadership section, routes and noindex controls are unchanged.
+
+Commands run, all passing: `npm run build` (6 routes); `npm test` (16 tests: original cases, shared rule fixtures, workflow and permissions, lead validation); `npm run test:ui` (14 original DOM checks); `npm run test:prototype` (three-role UI loop, persistence, reset); `npm run test:backend` (7 Python tests on the same fixtures); `npm run preview:file`; and `node scripts/artifact-check.mjs` (updated to allow the `/app` link).
+
+Real browser (headless Chromium) at 1440×900 and 390×844 on the home page, `/app/`, case Assessment, AI, Evidence and Claim tabs, admin and `/privacy/`: no console or page errors and no horizontal overflow. Two problems were fixed along the way: the case status row overflowed on mobile, and the consent checkboxes collided with the existing `.check` icon style. The offline preview opens the prototype, navigates inside it and returns home without errors.
+
+Not claimed: screen-reader and real-device checks, live HubSpot submission, anything on AWS.
+
+Owner decisions open: real prices (the plans say “Pricing on request”); the HubSpot IDs and matching Privacy wording; actual supplier terms for a pilot.

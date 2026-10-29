@@ -7,7 +7,7 @@ for(const link of doc.querySelectorAll('a[href]')){
  const href=link.getAttribute('href');
  if(href.startsWith('/#'))assert.ok(doc.getElementById(href.slice(2)),href);
  else if(href.startsWith('#'))assert.ok(doc.getElementById(href.slice(1)),href);
- else if(href.startsWith('/')&&href!=='/')assert.ok(['/privacy','/terms','/brand'].includes(href),href);
+ else if(href.startsWith('/')&&href!=='/')assert.ok(['/privacy','/terms','/brand','/app'].includes(href),href);
 }
 for(const tag of doc.querySelectorAll('link[rel="icon"],link[rel="apple-touch-icon"]'))await fs.access('dist'+tag.getAttribute('href'));
 assert.equal(doc.querySelector('meta[property="og:image"]').content,'https://afterfault.site/brand/social.png');

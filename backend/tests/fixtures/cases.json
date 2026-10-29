@@ -1,0 +1,36 @@
+{
+  "_comment": "Shared rule fixtures. src/app/engine.test.js (prototype) and backend/tests/test_lambdas.py (Lambda) must both produce these statuses, potentials and check results.",
+  "terms": {
+    "parts_only": { "id": "T1", "clause": "Clause FX-1", "coverageMonths": 12, "labourPct": 0, "labourCap": null, "filingDays": 60, "requiredEvidence": ["Repair report", "Parts invoice", "Serial-number photograph"], "excludedComponents": ["Door gasket"], "exclusions": ["power surge"], "exclusionText": "Power surge damage is excluded." },
+    "half_labour_capped": { "id": "T2", "clause": "Clause FX-2", "coverageMonths": 24, "labourPct": 50, "labourCap": 100, "filingDays": 30, "requiredEvidence": ["Repair report", "Parts invoice"], "excludedComponents": [], "exclusions": [], "exclusionText": "" }
+  },
+  "base": {
+    "component": "Compressor", "serial": "ABC-123", "installed": "2026-01-31", "repaired": "2026-09-01",
+    "partsLines": [{ "desc": "Compressor", "amount": 240 }], "labour": 90, "technicianNotes": "",
+    "evidence": [
+      { "name": "Repair report", "present": true },
+      { "name": "Parts invoice", "present": true, "value": 240 },
+      { "name": "Serial-number photograph", "present": true, "value": "abc 123" }
+    ]
+  },
+  "cases": [
+    { "name": "all present, parts only", "terms": "parts_only", "today": "2026-09-10", "patch": {}, "status": "Ready for review", "potential": 240, "results": { "coverage": "pass", "serial": "pass", "invoice": "pass", "filing": "pass" } },
+    { "name": "repair on coverage end date is inside", "terms": "parts_only", "today": "2026-08-01", "patch": { "installed": "2025-08-01", "repaired": "2026-08-01" }, "status": "Ready for review", "potential": 240, "results": { "coverage": "pass", "filing": "pass" } },
+    { "name": "repair a day after coverage end", "terms": "parts_only", "today": "2026-08-02", "patch": { "installed": "2025-08-01", "repaired": "2026-08-02" }, "status": "Outside coverage", "potential": null, "results": { "coverage": "fail" } },
+    { "name": "month-end overflow: 31 Jan + 1 month is 3 Mar", "terms": "parts_only", "today": "2026-03-04", "patch": { "installed": "2026-01-31", "repaired": "2026-03-03" }, "termsPatch": { "coverageMonths": 1 }, "status": "Ready for review", "potential": 240, "results": { "coverage": "pass" } },
+    { "name": "excluded component", "terms": "parts_only", "today": "2026-09-10", "patch": { "component": "door gasket" }, "status": "Excluded component", "potential": null, "results": { "component": "fail" } },
+    { "name": "filing window closed", "terms": "parts_only", "today": "2026-11-01", "patch": {}, "status": "Filing window closed", "potential": null, "results": { "filing": "fail" } },
+    { "name": "filing window closes within a week", "terms": "parts_only", "today": "2026-10-25", "patch": {}, "status": "Ready for review", "potential": 240, "results": { "filing": "warn" } },
+    { "name": "invoice missing: amount unknown", "terms": "parts_only", "today": "2026-09-10", "patch": { "evidence": [{ "name": "Repair report", "present": true }, { "name": "Parts invoice", "present": false }, { "name": "Serial-number photograph", "present": true, "value": "ABC-123" }] }, "status": "Eligibility unknown", "potential": null, "results": { "invoice": "unknown", "evidence": "fail" } },
+    { "name": "photo missing: needs evidence, amount still shown", "terms": "parts_only", "today": "2026-09-10", "patch": { "evidence": [{ "name": "Repair report", "present": true }, { "name": "Parts invoice", "present": true, "value": 240 }, { "name": "Serial-number photograph", "present": false }] }, "status": "Needs evidence", "potential": 240, "results": { "serial": "unknown", "evidence": "fail" } },
+    { "name": "serial mismatch", "terms": "parts_only", "today": "2026-09-10", "patch": { "evidence": [{ "name": "Repair report", "present": true }, { "name": "Parts invoice", "present": true, "value": 240 }, { "name": "Serial-number photograph", "present": true, "value": "ABC-12" }] }, "status": "Needs evidence", "potential": 240, "results": { "serial": "fail" } },
+    { "name": "invoice total differs from report", "terms": "parts_only", "today": "2026-09-10", "patch": { "partsLines": [{ "desc": "Pump", "amount": 85 }], "evidence": [{ "name": "Repair report", "present": true }, { "name": "Parts invoice", "present": true, "value": 95 }, { "name": "Serial-number photograph", "present": true, "value": "ABC-123" }] }, "status": "Needs evidence", "potential": 85, "results": { "invoice": "fail" } },
+    { "name": "repair before install", "terms": "parts_only", "today": "2026-09-10", "patch": { "installed": "2026-09-05" }, "status": "Check dates", "potential": null, "results": { "dates": "fail" } },
+    { "name": "labour 50% under cap", "terms": "half_labour_capped", "today": "2026-09-10", "patch": { "labour": 90 }, "status": "Ready for review", "potential": 285, "results": {} },
+    { "name": "labour 50% hits cap", "terms": "half_labour_capped", "today": "2026-09-10", "patch": { "labour": 260, "partsLines": [{ "desc": "Valve", "amount": 260 }, { "desc": "Kit", "amount": 50.5 }], "evidence": [{ "name": "Repair report", "present": true }, { "name": "Parts invoice", "present": true, "value": 310.5 }] }, "status": "Ready for review", "potential": 410.5, "results": { "invoice": "pass", "serial": null } }
+  ],
+  "suggestions": [
+    { "notes": "Fault started after a POWER-SURGE on site.", "terms": "parts_only", "phrases": ["power surge"] },
+    { "notes": "Bearings worn; replaced.", "terms": "parts_only", "phrases": [] }
+  ]
+}
