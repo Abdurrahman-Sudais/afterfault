@@ -123,3 +123,12 @@ Sample desk changes on the home page remain in memory and disappear on reload or
 Core branding is SVG and editable. The wordmark uses the local Arial/Helvetica sans-serif stack rather than a remotely loaded font. PNGs are supplied so the rendered wordmark is fixed when needed.
 
 The marketing site's static hosting is separate from the proposed AWS SaaS architecture. Read `HANDOVER.md` before adding real processing or uploading real repair evidence.
+
+## Purpose & motion update
+
+- New purpose sections on the home page (`src/Purpose.jsx`, copy in `src/purpose-data.js`): a scroll-lit manifesto with Afterfault’s purpose, sourced stakes, a today-vs-with-Afterfault comparison, six principles, a note from the founders and a Now→Later vision timeline. “Purpose” is in the main nav.
+- Motion layer (`src/motion.js`, `src/purpose.css`): hero entrance, scroll-progress bar, blur-up reveals across every section, count-up stats with drawn bars, strike-through/tick animations, tilt-and-spotlight cards, magnetic primary buttons, hero parallax, a drawn signature and a scroll-linked timeline. Content stays visible without JavaScript; everything is static with reduced motion.
+
+### To confirm
+- Statistics are figures reported by Warranty Week (warranty accruals and claims paid, 2024); the links point to warrantyweek.com — replace them with the exact article URLs and re-check the numbers before launch.
+- The founders’ note speaks to purpose only; edit it so it is in Chinedu’s and Bashiru’s own words.
